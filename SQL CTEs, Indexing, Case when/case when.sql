@@ -4,7 +4,7 @@
 --ex:
     Select
         employee,
-        (case when salary <= 20000 then 'Low' 
+        sum(case when salary <= 20000 then 'Low' 
              when salary >=20000 and salary <= 30000 then 'average'
              when salary >= 50000 then 'High'
              else 0

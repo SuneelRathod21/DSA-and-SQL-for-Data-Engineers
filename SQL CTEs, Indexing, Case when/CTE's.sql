@@ -38,3 +38,45 @@ where rn <=5
 -------------------------------------------------------------------------------
 
 --Running total
+-- Given a sales table with order_date, amount, calculate the running total of sales by date.
+Select 
+    order_date,
+    sum(amount) over(order by order_date) as total_running
+from sales
+-- No GROUP BY → window functions work row-wise
+----------------------------------------------------------------------------
+-- From daily_sales, show current sales and next day sales.
+Select
+    order_date,
+    sales as current_sales,
+    LEAD(sales) over(order by order_date) as next_day_sales
+from sales
+
+-----------------------------------------------------
+-- From daily_sales, show current sales and previous day sales.
+Select
+    order_date,
+    sales as current_sales,
+    LAG(sales) over(order by order_date) as previous_day_sales
+from sales
+------------------------------------------------------------------------
+-- combine
+
+with group_date as 
+( select
+	transaction_date,
+	sum(price) as price
+from raw_schema.transactions
+group by  transaction_date
+)
+
+select 
+	transaction_date,
+	lag(price) over(order by transaction_date ) as previous_day_price,
+	price as current_price,
+	LEAD(price) over(order by transaction_date ) as next_day_price,
+	sum(price) over(order by transaction_date ) as comu_sum		
+from group_date
+
+--------------------------------------------------------------------------
+    
